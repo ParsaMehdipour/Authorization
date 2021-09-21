@@ -1,0 +1,22 @@
+﻿@model Endpoint.Site.ViewModels.Role.RoleValidationGuidViewModel
+
+@{
+    ViewData["Title"] = "RoleValidationGuid";
+}
+
+<h1>RoleValidationGuid</h1>
+
+<form asp-controller="SiteSetting" asp-action="RoleValidationGuid" method="post">
+    <div asp-validation-summary="ModelOnly"></div>
+
+    <div class="form-group">
+        <label class="control-label" asp-for="@Model.Value"></label>
+        <input readonly="readonly" class="form-control" asp-for="@Model.Value" />
+    </div>
+    <div class="form-group">
+        <label class="control-label" asp-for="@Model.LastTimeChanged"></label>
+        <input readonly="readonly" class="form-control" asp-for="@Model.LastTimeChanged" />
+    </div>
+
+    <button class="btn btn-primary" type="submit">Generate New Guid</button>
+</form>

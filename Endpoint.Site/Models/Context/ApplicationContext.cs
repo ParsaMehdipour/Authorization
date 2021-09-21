@@ -7,6 +7,7 @@ namespace Endpoint.Site.Models.Context
     {
 
         public DbSet<Car> Cars { get; set; }
+        public DbSet<SiteSetting> SiteSettings { get; set; }
 
         public ApplicationContext(DbContextOptions<ApplicationContext> options)
             :base(options)
