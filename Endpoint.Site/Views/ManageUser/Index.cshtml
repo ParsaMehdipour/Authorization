@@ -1,0 +1,45 @@
+﻿@model List<Endpoint.Site.ViewModels.User.IndexViewModel>
+@{
+    ViewData["Title"] = "Index";
+}
+
+
+@if (!Model.Any())
+{
+    <h1>کاربری یافت نشد</h1>
+}
+else
+{
+    for (int i = 0; i < Model.Count; i++)
+    {
+        <div class="card mt-2">
+            <div class="card-header">
+                User Name : <b>@Model[i].UserName</b>
+            </div>
+            <div class="card-body">
+                User Email : <b>@Model[i].Email</b>
+            </div>
+            <div class="card-footer">
+                <form asp-controller="ManageUser" asp-action="DeleteUser" asp-route-id="@Model[i].Id" method="post">
+
+                    <a asp-controller="ManageUser" asp-action="EditUser" asp-route-id="@Model[i].Id"
+                       class="btn btn-primary">Edit Username</a>
+
+                    <a asp-controller="ManageUser" asp-action="AddUserToRole" asp-route-id="@Model[i].Id"
+                       class="btn btn-primary">Add to role</a>
+                    <a asp-controller="ManageUser" asp-action="RemoveUserFromRole" asp-route-id="@Model[i].Id"
+                       class="btn btn-danger">Remove From role</a>
+                    <br />
+                    <br />
+                    <a asp-controller="ManageUser" asp-action="AddUserToClaim" asp-route-id="@Model[i].Id"
+                       class="btn btn-primary">Add to Claim</a>
+                    <a asp-controller="ManageUser" asp-action="RemoveUserFromClaim" asp-route-id="@Model[i].Id"
+                       class="btn btn-danger">Remove From Claim</a>
+
+
+                    <button type="submit" class="btn btn-danger">Delete user</button>
+                </form>
+            </div>
+        </div>
+    }
+}

@@ -1,0 +1,31 @@
+﻿@model List<Microsoft.AspNetCore.Identity.IdentityRole>
+@{
+    ViewData["Title"] = "Index";
+}
+
+<a asp-controller="ManageRole" asp-action="AddRole" class="btn btn-primary">Add role</a>
+
+@if (!Model.Any())
+{
+    <h1>مقامی یافت نشد</h1>
+}
+else
+{
+    foreach (var role in Model)
+    {
+        <div class="card mt-2">
+            <div class="card-body">
+                Role Name : <b>@role.Name</b>
+            </div>
+            <div class="card-footer">
+                <form asp-controller="ManageRole" asp-action="DeleteRole" method="post" asp-route-id="@role.Id">
+
+                    <a asp-controller="ManageRole" asp-action="EditRole" asp-route-id="@role.Id"
+                       class="btn btn-primary">Edit</a>
+
+                    <button type="submit" class="btn btn-danger">Delete</button>
+                </form>
+            </div>
+        </div>
+    }
+}

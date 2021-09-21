@@ -1,0 +1,29 @@
+﻿@model Endpoint.Site.ViewModels.User.AddUserToRoleViewModel
+@{
+    ViewData["Title"] = "DeleteUserToRole";
+}
+
+<h1>DeleteUserToRole</h1>
+
+<form asp-controller="ManageUser" asp-action="RemoveUserFromRole" method="post">
+    <div asp-validation-summary="ModelOnly"></div>
+    @if (!Model.UserRoleViewModels.Any())
+    {
+        <h1>هیچ مقامی یافت نشد</h1>
+    }
+    else
+    {
+        for (int i = 0; i < Model.UserRoleViewModels.Count; i++)
+        {
+            <div class="form-group">
+                <input asp-for="@Model.UserRoleViewModels[i].IsSelected" />
+                <label>@Model.UserRoleViewModels[i].RoleName</label>
+
+                <input type="hidden" asp-for="@Model.UserRoleViewModels[i].RoleName" />
+            </div>
+        }
+    }
+
+    <input type="hidden" asp-for="@Model.UserId" />
+    <button class="btn btn-primary" type="submit">Submit</button>
+</form>
