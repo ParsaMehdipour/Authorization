@@ -1,0 +1,32 @@
+﻿@model Endpoint.Site.ViewModels.Role.CreateRoleViewModel
+
+
+@{
+    ViewData["Title"] = "CreateRole";
+}
+
+<h1>CreateRole</h1>
+<form asp-controller="Role" asp-action="CreateRole" method="post">
+    <div asp-validation-summary="ModelOnly"></div>
+    <br />
+    <input asp-for="RoleName" />
+    <br />
+    <span class="text-danger" asp-validation-for="RoleName"></span>
+
+    @for (int i = 0; i < Model.ActionAndControllerNames.Count; i++)
+    {
+        <div class="form-group">
+            <input asp-for="ActionAndControllerNames[i].IsSelected" />
+            <input type="hidden" readonly="readonly" asp-for="ActionAndControllerNames[i].ActionName" />
+            <input type="hidden" readonly="readonly" asp-for="ActionAndControllerNames[i].ControllerName" />
+            <input type="hidden" readonly="readonly" asp-for="ActionAndControllerNames[i].AreaName" />
+            <label for="ActionAndControllerNames_@(i)__IsSelected">
+                @(Model.ActionAndControllerNames[i].AreaName ?? "NoArea") -
+                @Model.ActionAndControllerNames[i].ControllerName -
+                @Model.ActionAndControllerNames[i].ActionName
+            </label>
+        </div>
+    }
+
+    <button type="submit">Submit</button>
+</form>

@@ -35,6 +35,8 @@ namespace Endpoint.Site
 
             services.AddTransient<IMessageSender, MessageSender>();
 
+            services.AddTransient<IUtilities, Utilities>();
+
             services.AddDbContext<ApplicationContext>(options =>
             {
                 options.UseSqlServer(Configuration.GetConnectionString("AppConnectionString"));

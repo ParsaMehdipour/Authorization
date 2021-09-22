@@ -1,0 +1,26 @@
+﻿@model List<Endpoint.Site.ViewModels.Role.IndexViewModel>
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h1>Index</h1>
+
+<a asp-controller="Role" asp-action="CreateRole">Create Role</a>
+
+<div class="container">
+    @if (Model.Any())
+    {
+        @foreach (var role in Model)
+        {
+            <div class="form-group">
+                Name = @role.RoleName
+                <br />
+                RoleId = @role.RoleId
+            </div>
+        }
+    }
+    else
+    {
+        <p>No Role Found.</p>
+    }
+</div>
