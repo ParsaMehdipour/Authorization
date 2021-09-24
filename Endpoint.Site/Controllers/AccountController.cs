@@ -1,7 +1,10 @@
-﻿using System.Threading.Tasks;
+﻿using System.Diagnostics;
+using System.Threading.Tasks;
 using Endpoint.Site.Repositories;
 using Endpoint.Site.ViewModels.Login;
+using Endpoint.Site.ViewModels.Password;
 using Endpoint.Site.ViewModels.Register;
+using Microsoft.AspNetCore.Components.Forms;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 
@@ -145,6 +148,77 @@ namespace Endpoint.Site.Controllers
             var result = await _userManager.ConfirmEmailAsync(user, token);
 
             return Content(result.Succeeded ? "Email Confirmed" : "Email Not Confirmed");
+        }
+
+
+        [HttpGet]
+        public IActionResult ForgotPassword()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> ForgotPassword(ForgotPasswordViewModel model)
+        {
+            if (ModelState.IsValid)
+            {
+                var loginViewModel = new LoginViewModel();
+;
+                ViewData["ErrorMessage"] = "اگر ایمیل وارد معتبر باشد، لینک فراموشی رمزعبور به ایمیل شما ارسال خواهد شد";
+
+                var user = await _userManager.FindByEmailAsync(model.Email);
+                if (user == null) return View("Login");
+
+                var resetPasswordToken = await _userManager.GeneratePasswordResetTokenAsync(user);
+                var resetPasswordUrl = Url.Action("ResetPassword", "Account",
+                    new { email = user.Email, token = resetPasswordToken }, Request.Scheme);
+
+                await _messageSender.SendEmailAsync(user.Email, "reset password link", resetPasswordUrl);
+
+                return View("Login", loginViewModel);
+            }
+
+            return View(model);
+        }
+
+        [HttpGet]
+        public IActionResult ResetPassword(string email,string token)
+        {
+            if (string.IsNullOrWhiteSpace(email) || string.IsNullOrWhiteSpace(token))
+                return RedirectToAction("Index", "Home");
+
+            var model = new ResetPasswordViewModel()
+            {
+                Email = email,
+                Token = token
+            };
+
+            return View(model);
+        }
+
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> ResetPassword(ResetPasswordViewModel model)
+        {
+            if (ModelState.IsValid)
+            {
+                var user = await _userManager.FindByEmailAsync(model.Email);
+                if (user == null) return RedirectToAction("Login");
+                var result = await _userManager.ResetPasswordAsync(user, model.Token, model.NewPassword);
+                if (result.Succeeded)
+                {
+                    ViewData["ErrorMessage"] = "رمزعبور شما با موفقیت تغییر یافت";
+                    return View("Login");
+                }
+
+                foreach (var error in result.Errors)
+                {
+                    ModelState.AddModelError("", error.Description);
+                }
+            }
+            return View(model);
         }
     }
 }

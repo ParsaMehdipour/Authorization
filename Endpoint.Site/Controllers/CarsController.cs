@@ -21,7 +21,8 @@ namespace Endpoint.Site.Controllers
             _context = context;
         }
 
-        [Authorize(Policy = "CarListPolicy")]
+        [Authorize(Policy = "DynamicRoleV1")]
+        //[Authorize(Policy = "CarListPolicy")]
         // GET: Cars
         public async Task<IActionResult> Index()
         {
@@ -46,7 +47,7 @@ namespace Endpoint.Site.Controllers
             return View(car);
         }
 
-        [Authorize(Policy = "AddCarPolicy")]
+        //[Authorize(Policy = "AddCarPolicy")]
         // GET: Cars/Create
         public IActionResult Create()
         {

@@ -12,6 +12,7 @@ using System.Threading.Tasks;
 using Endpoint.Site.Models.Context;
 using Endpoint.Site.Repositories;
 using Endpoint.Site.Security.Default;
+using Endpoint.Site.Security.DynamicV1;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -32,10 +33,6 @@ namespace Endpoint.Site
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllersWithViews();
-
-            services.AddTransient<IMessageSender, MessageSender>();
-
-            services.AddTransient<IUtilities, Utilities>();
 
             services.AddDbContext<ApplicationContext>(options =>
             {
@@ -77,7 +74,20 @@ namespace Endpoint.Site
                 {
                     policy.AddRequirements(new ClaimRequirement(ClaimTypesStore.CarList, true.ToString()));
                 });
+
+                options.AddPolicy("DynamicRoleV1", policy =>
+                {
+                    policy.Requirements.Add(new DynamicRoleRequirement());
+                });
             });
+
+
+            services.AddMemoryCache();
+            services.AddHttpContextAccessor();
+            services.AddTransient<IUtilities, Utilities>();
+            services.AddScoped<IMessageSender, MessageSender>();
+            services.AddScoped<IAuthorizationHandler, DynamicRoleHandler>();
+            services.AddSingleton<IAuthorizationHandler, ClaimHandler>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
